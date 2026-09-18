@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PDF to Excel Converter</title>
+<link rel="icon" type="image/jpeg" href="static/pic/favicon.jpg">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<div class="web-badge">PDF to Excel Web V15 • Settings</div>
+<div class="app-shell">
+<aside class="sidebar">
+  <div class="brand"><img src="static/pic/app_logo.png"><div><b>PDF to Excel</b><span>Converter</span></div></div>
+  <nav>
+    <button class="nav-item active" data-page="convert"><span class="nav-icon">▤</span><span>ราคาปาล์ม</span></button>
+    <button class="nav-item" data-page="volume"><span class="nav-icon">▧</span><span>ปริมาณผลปาล์ม/CPO</span></button>
+    <button class="nav-item" data-page="history"><span class="nav-icon">◷</span><span>ประวัติการแปลง</span></button>
+    <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span><span>การตั้งค่า</span></button>
+    <button class="nav-item" data-page="about"><span class="nav-icon">ⓘ</span><span>เกี่ยวกับ</span></button>
+  </nav>
+  <div class="font-size" aria-label="ปรับขนาดตัวอักษร">
+  <div class="font-size-head"><span>ขนาดตัวอักษร</span><output id="fontScaleValue">100%</output></div>
+  <div class="font-size-control"><span class="font-a small">A</span><input id="fontScale" type="range" min="85" max="125" step="1" value="100" aria-label="ขนาดตัวอักษร"><span class="font-a large">A</span></div>
+</div>
+</aside>
+
+<main class="main">
+<header class="topbar"><div class="topbar-left"><div class="mobile-brand"><img src="static/pic/app_logo.png"><span>PDF to Excel</span></div><span class="crumb-main" id="crumb">PDF to Excel <b>›</b> ราคาปาล์ม</span></div><div class="topbar-actions"><div class="system-pill"><i></i> ระบบพร้อมใช้งาน</div><button type="button" class="gear" id="gearSettings" title="เปิดการตั้งค่า" aria-label="เปิดการตั้งค่า">⚙</button></div></header>
+
+<section id="convertPage" class="content page">
+  <div class="hero"><div class="hero-orb orb1"></div><div class="hero-orb orb2"></div>
+    <div><h1>แปลง <em>PDF</em> เป็น <strong>Excel</strong></h1><h3 id="pageSubtitle">ราคาน้ำมันปาล์ม (Daily Price Report)</h3><p>อัปโหลด PDF ตรวจสอบข้อมูล แล้วส่งออกเป็นไฟล์ที่พร้อมใช้งาน</p></div>
+    <div class="format-badges"><img src="static/pic/icon_pdf.png"><span>→</span><img src="static/pic/icon_excel.png"></div>
+  </div>
+
+  <div class="grid">
+    <section class="card drop-card">
+      <div id="dropzone" class="dropzone"><div class="upload-icon">▤</div><h2>ลากไฟล์ PDF มาวางที่นี่</h2><p>รองรับไฟล์ .pdf</p>
+      <label class="primary-btn">เลือกไฟล์จากเครื่อง<input id="fileInput" type="file" accept=".pdf,application/pdf" multiple hidden></label>
+      <div id="fileName" class="file-name">ยังไม่ได้เลือกไฟล์</div><div id="fileList" class="file-list"></div></div>
+      <button id="scanBtn" class="scan-btn" disabled>🔍 &nbsp; สแกนตัวอย่าง</button>
+    </section>
+
+    <section class="card settings">
+      <h2>ข้อมูลไฟล์</h2><div id="fileInfo" class="muted">ยังไม่ได้เลือกไฟล์</div>
+      <h3>ประเภทเอกสาร</h3><select id="documentType"><option value="price">ราคาน้ำมันปาล์ม</option><option value="volume">ปริมาณผลปาล์ม/CPO</option><option value="generic">อ่านตารางทั่วไป</option></select>
+      <h3>ตัวเลือกส่งออก</h3><select id="exportFormat"><option>Excel (.xlsx)</option><option>CSV</option><option>JSON</option></select>
+      <button id="exportBtn" class="export-btn" disabled>ส่งออกไฟล์</button>
+    </section>
+  </div>
+
+  <section class="card preview"><div class="preview-head"><div><h2>ตัวอย่างข้อมูล (Preview)</h2><p id="previewMeta">เลือกไฟล์แล้วกด “สแกนตัวอย่าง” เพื่อดูข้อมูล</p></div><div id="status" class="status"></div></div>
+  <div id="progressBar" class="progress-bar"><span></span></div><div id="fileTabs" class="file-tabs"></div><div id="warnings"></div><div id="columnChooser" class="columns"></div><div id="tableWrap" class="table-wrap"><div class="empty">ยังไม่มีข้อมูล</div></div></section>
+</section>
+
+<section id="historyPage" class="content page hidden">
+  <div class="page-title"><h1>ประวัติการแปลง</h1><button id="clearHistory" class="danger-btn">ล้างประวัติ</button></div>
+  <section class="card panel"><div id="historyList" class="history-list"><div class="empty">ยังไม่มีประวัติ</div></div></section>
+</section>
+
+<section id="settingsPage" class="content page hidden">
+  <div class="settings-hero">
+    <div><div class="eyebrow">SYSTEM SETTINGS</div><h1>การตั้งค่า</h1><p>กำหนดค่าการทำงานเริ่มต้นของ PDF to Excel ให้เหมาะกับรูปแบบงานของคุณ</p></div>
+    <button id="saveSettings" class="primary-btn save-settings-btn">บันทึกการตั้งค่า</button>
+  </div>
+  <div class="settings-grid">
+    <section class="card setting-card">
+      <div class="setting-card-head"><div class="setting-icon">▤</div><div><h2>การแปลงข้อมูล</h2><p>กำหนดค่าที่ใช้เมื่อเริ่มงานใหม่</p></div></div>
+      <label>ประเภทเอกสารเริ่มต้น<select id="defaultDocumentType"><option value="price">ราคาปาล์ม</option><option value="volume">ปริมาณผลปาล์ม/CPO</option><option value="generic">ตารางทั่วไป</option></select></label>
+      <label>รูปแบบส่งออกเริ่มต้น<select id="defaultExportFormat"><option>Excel (.xlsx)</option><option>CSV</option><option>JSON</option></select></label>
+    </section>
+    <section class="card setting-card">
+      <div class="setting-card-head"><div class="setting-icon">▦</div><div><h2>Preview</h2><p>ควบคุมจำนวนข้อมูลที่แสดงก่อนส่งออก</p></div></div>
+      <label>จำนวนแถว Preview สูงสุด<input id="maxPreviewRows" type="number" min="10" max="500" step="10"></label>
+      <label>ขนาดตัวอักษร<input id="settingsFontScale" type="range" min="85" max="125" step="1" value="100"><span id="settingsFontScaleValue" class="range-value">100%</span></label>
+      <div class="setting-hint">แนะนำ 100–300 แถว เพื่อให้ตารางยังตอบสนองได้ดีเมื่อไฟล์มีข้อมูลจำนวนมาก</div>
+    </section>
+    <section class="card setting-card full-width">
+      <div class="setting-card-head"><div class="setting-icon">✓</div><div><h2>สถานะระบบ</h2><p>การตั้งค่าจะถูกบันทึกไว้สำหรับการใช้งานครั้งถัดไป</p></div></div>
+      <div id="settingsStatus" class="settings-status"><span class="status-dot"></span><span>พร้อมใช้งาน</span></div>
+    </section>
+  </div>
+</section>
+
+<section id="aboutPage" class="content page hidden">
+  <section class="card about"><img src="static/pic/app_logo.png"><h1>PDF to Excel Converter V13</h1><p>Web App สำหรับอ่านข้อมูลตารางจาก PDF และส่งออกเป็น Excel, CSV หรือ JSON</p><div class="app-note"><div class="app-note-icon">▣</div><div><strong>แนะนำ Desktop App สำหรับงานหลัก</strong><p>สำหรับงานประจำและไฟล์จำนวนมาก Desktop App เป็นตัวเลือกหลักของโปรเจกต์นี้ เพราะประมวลผลบนเครื่องโดยตรง จึงไม่ขึ้นกับการเชื่อมต่อเว็บหรือการทำงานของเซิร์ฟเวอร์ และโดยทั่วไปให้ workflow ที่เสถียรกว่าสำหรับการใช้งานภายในเครื่อง</p></div></div><p class="muted">Web App เหมาะสำหรับเข้าถึงง่ายจากเบราว์เซอร์และใช้ทดสอบหรือแชร์ workflow</p></section>
+</section>
+</main>
+</div>
+<script src="static/app.js?v=14"></script>
+</body></html>
